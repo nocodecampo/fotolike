@@ -1,41 +1,49 @@
 <?php
-if(isset($_POST['nombre'])){
+if(isset($_POST['email'])){
     // Conexión a la base de datos
     include 'dbconnect.php';
     // Preparamos la consulta
-    $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password) VALUES (:nombre, :email, :password)");
+    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE email = :email");
     // Enlazamos los parámetros
-    $stmt->bindParam(':nombre', $_POST['nombre']);
     $stmt->bindParam(':email', $_POST['email']);
-    $stmt->bindParam(':password', password_hash($_POST['password'], PASSWORD_DEFAULT));
     // Ejecutamos la consulta
     $stmt->execute();
-    // Redirigimos a la página
-    header('Location: registro.php');
-    exit;
-}
+    // Obtenemos el resultado
+    $usuario = $stmt->fetch();
 
+    // Verificamos la contraseña
+    if(password_verify($_POST['password'], $usuario['password'])){
+        // Iniciamos la sesión
+        session_start();
+        // Guardamos datos del usuario en la sesión
+        $_SESSION['id'] = $usuario['id'];
+        $_SESSION['nombre'] = $usuario['nombre'];
+        $_SESSION['email'] = $usuario['email'];
+        // Redirigimos a la página
+        header('Location: index.php');
+        exit;
+    }
+    // Si la contraseña no coincide
+    $error = 'Email o contraseña incorrectos';
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
+    <title>Login</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
     <main>
         <section>
-        <h1>Regístrate y a callar:</h1>
+            <h1>¡Bienvenido!</h1>
             <form action="" method="post">
-                <div>
-                    <label for="nombre">Nombre<span>*</span></label>
-                    <input type="text" name="nombre" id="nombre" placeholder="Nombre" required>
-                </div>
+                <?php if(isset($error)): ?>
+                    <p class="error"><?php echo $error; ?></p>
+                <?php endif; ?>
                 <div>
                     <label for="email">Email<span>*</span></label>
                     <input type="email" name="email" id="email" placeholder="Email" required>
@@ -44,10 +52,9 @@ if(isset($_POST['nombre'])){
                     <label for="password">Contraseña<span>*</span></label>
                     <input type="password" name="password" id="password" placeholder="Contraseña" required>
                 </div>
-                <button type="submit">Registrarse</button>
+                <button type="submit">Iniciar sesión</button>
             </form>
         </section>
     </main>
 </body>
-
 </html>
