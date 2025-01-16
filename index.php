@@ -29,6 +29,7 @@ $conn = null;
             <a href="nueva-foto.php">Subir foto</a>
             <a href="login.php">Iniciar sesión</a>
             <a href="registro.php">Registrarse</a>
+            <a href="cerrar-sesion.php">Cerrar sesión</a>
         </nav>
     </header>
     <main>
