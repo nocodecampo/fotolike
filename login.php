@@ -20,7 +20,7 @@ if(isset($_POST['email'])){
         $_SESSION['nombre'] = $usuario['nombre'];
         $_SESSION['email'] = $usuario['email'];
         // Redirigimos a la página
-        header('Location: index.php');
+        header('Location: nueva-foto.php');
         exit;
     }
     // Si la contraseña no coincide

@@ -1,14 +1,47 @@
-<?php 
+<?php
+// inicio de sesión
+session_start();
+// si no hay sesión iniciada
+if (!isset($_SESSION['id'])) {
+    // redirigimos a la página de login
+    header('Location: login.php');
+    exit;
+}
+// Id de sesión del usuario
+$id = $_SESSION['id'];
 
+if (isset($_POST['titulo'])) {
+    // Conexión a la base de datos
+    include 'dbconnect.php';
+
+    // Guardamos la imagen en una ruta del servidor
+    $imagen = $_FILES['imagen']['tmp_name'];
+    $ruta = 'img/' . $_FILES['imagen']['name'];
+    move_uploaded_file($imagen, $ruta);
+
+    // Preparamos la consulta
+    $stmt = $conn->prepare("INSERT INTO fotos (titulo, foto, idUsuario) VALUES (:titulo, :ruta, :usuario_id)");
+    // Enlazamos los parámetros
+    $stmt->bindParam(':titulo', $_POST['titulo']);
+    $stmt->bindParam(':ruta', $ruta);
+    $stmt->bindParam(':usuario_id', $id);
+    // Ejecutamos la consulta
+    $stmt->execute();
+    // Redirigimos a la página
+    header('Location: index.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sube tu foto</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <main>
         <section>
@@ -27,4 +60,5 @@
         </section>
     </main>
 </body>
+
 </html>
