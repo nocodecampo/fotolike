@@ -1,4 +1,20 @@
 <?php
+if(isset($_POST['nombre'])){
+    // Conexión a la base de datos
+    include 'dbconnect.php';
+    // Preparamos la consulta
+    $stmt = $conn->prepare("INSERT INTO usuarios (nombre, email, password) VALUES (:nombre, :email, :password)");
+    // Enlazamos los parámetros
+    $stmt->bindParam(':nombre', $_POST['nombre']);
+    $stmt->bindParam(':email', $_POST['email']);
+    $stmt->bindParam(':password', password_hash($_POST['password'], PASSWORD_DEFAULT));
+    // Ejecutamos la consulta
+    $stmt->execute();
+    // Redirigimos a la página de inicio
+    header('Location: index.php');
+    exit;
+}
+
 ?>
 
 <!DOCTYPE html>
