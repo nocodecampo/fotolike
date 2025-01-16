@@ -11,7 +11,7 @@ if(isset($_POST['nombre'])){
     // Ejecutamos la consulta
     $stmt->execute();
     // Redirigimos a la página
-    header('Location: registro.php');
+    header('Location: login.php');
     exit;
 }
 

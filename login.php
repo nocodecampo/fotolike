@@ -11,20 +11,25 @@ if(isset($_POST['email'])){
     // Obtenemos el resultado
     $usuario = $stmt->fetch();
 
-    // Verificamos la contraseña
-    if(password_verify($_POST['password'], $usuario['password'])){
-        // Iniciamos la sesión
-        session_start();
-        // Guardamos datos del usuario en la sesión
-        $_SESSION['id'] = $usuario['id'];
-        $_SESSION['nombre'] = $usuario['nombre'];
-        $_SESSION['email'] = $usuario['email'];
-        // Redirigimos a la página
-        header('Location: nueva-foto.php');
-        exit;
+    if($usuario){
+        // Verificamos la contraseña
+        if(password_verify($_POST['password'], $usuario['password'])){
+            // Iniciamos la sesión
+            session_start();
+            // Guardamos datos del usuario en la sesión
+            $_SESSION['id'] = $usuario['id'];
+            $_SESSION['nombre'] = $usuario['nombre'];
+            $_SESSION['email'] = $usuario['email'];
+            // Redirigimos a la página
+            header('Location: nueva-foto.php');
+            exit;
+        }
+        // Si la contraseña no coincide
+        $error = 'Contraseña incorrecta';
+    } else {
+        // Si el usuario no existe
+        $error = 'El usuario no existe';
     }
-    // Si la contraseña no coincide
-    $error = 'Email o contraseña incorrectos';
 }
 ?>
 

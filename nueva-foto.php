@@ -4,11 +4,12 @@ session_start();
 // si no hay sesión iniciada
 if (!isset($_SESSION['id'])) {
     // redirigimos a la página de login
-    header('Location: login.php');
+    header('Location: login.php');  
     exit;
 }
 // Id de sesión del usuario
 $id = $_SESSION['id'];
+$username = $_SESSION['nombre'];
 
 if (isset($_POST['titulo'])) {
     // Conexión a la base de datos
@@ -31,9 +32,10 @@ if (isset($_POST['titulo'])) {
     header('Location: index.php');
     exit;
 }
+
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -45,7 +47,7 @@ if (isset($_POST['titulo'])) {
 <body>
     <main>
         <section>
-            <h1>Sube tu foto</h1>
+            <h1>Sube tu foto, <?php echo $username ?></h1>
             <form action="" method="post" enctype="multipart/form-data">
                 <div>
                     <label for="titulo">Título<span>*</span></label>
